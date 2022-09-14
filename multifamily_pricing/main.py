@@ -141,7 +141,7 @@ def pipeline():
 
 # Triggered by a change in a storage bucket
 @functions_framework.cloud_event
-def run_pricing_pipeline(event):
+def run_pricing_pipeline(event=None):
     template_path = tempfile.gettempdir() + '/pipeline.json'
     compiler.Compiler().compile(pipeline_func=pipeline, package_path=template_path)
 

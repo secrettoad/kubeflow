@@ -154,5 +154,3 @@ def run_pricing_pipeline(event=None):
     )
 
     job.run(sync=False)
-
-run_pricing_pipeline({})

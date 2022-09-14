@@ -7,10 +7,14 @@ import tempfile
 
 
 @component(packages_to_install=['dask[dataframe]', 'pyarrow', 'gcsfs'], base_image='python:3.7')
-def ingest_component(df_uri: str, df: Output[Dataset]):
+def ingest_component(df_uri: str, census_df_uri: str, df: Output[Dataset]):
     import dask.dataframe as dd
+    import datetime
+    _df_census = dd.read_csv(census_df_uri).set_index('Unnamed: 0')
     _df = dd.read_csv(df_uri).set_index('Unnamed: 0')
-    _df.to_parquet(df.uri)
+    _df['year'] = (datetime.datetime(year=2014, month=12, day=30) + dd.to_timedelta(_df['days_since_2014'], unit='days')).dt.year
+    _df_merge = _df.merge(_df_census, on=['blockgroup', 'year'])
+    _df_merge.to_parquet(df.uri)
 
 
 @component(packages_to_install=['dask[dataframe]', 'xgboost', 'scikit-learn', 'pyarrow', 'gcsfs'], base_image='python:3.7')
@@ -124,8 +128,8 @@ def deployment_component(model: Input[Model], metrics: Input[Artifact], vertex_e
     pipeline_root='gs://coysu-demo-pipelines/multifamily-pricing',
 )
 def pipeline():
-    train_data = ingest_component(df_uri='gs://coysu-demo-datasets/multifamily_pricing/train/*.csv')
-    test_data = ingest_component(df_uri='gs://coysu-demo-datasets/multifamily_pricing/test/*.csv')
+    train_data = ingest_component(df_uri='gs://coysu-demo-datasets/multifamily_pricing/train/*.csv', census_df_uri='gs://coysu-demo-datasets/multifamily_pricing/census/*.csv')
+    test_data = ingest_component(df_uri='gs://coysu-demo-datasets/multifamily_pricing/test/*.csv', census_df_uri='gs://coysu-demo-datasets/multifamily_pricing/census/*.csv')
     model = train_component(train_data.outputs['df'])
     insample_preds = predict_component(train_data.outputs['df'], model.outputs['model'])
     test_preds = predict_component(test_data.outputs['df'], model.outputs['model'])
@@ -151,3 +155,4 @@ def run_pricing_pipeline(event):
 
     job.run(sync=False)
 
+run_pricing_pipeline({})

@@ -27,7 +27,7 @@ def train_component(df_train: Input[Dataset], model: Output[Model], params: Outp
 
     fs = gcsfs.GCSFileSystem()
     _df_train = dd.read_parquet(df_train.uri).compute()
-    X = _df_train[['latitude', 'longitude', 'property_type', 'sqft', 'beds', 'baths', 'days_since_2014']]
+    X = _df_train[['latitude', 'longitude', 'property_type', 'sqft', 'beds', 'baths', 'days_since_2014', 'population', 'housing', 'transportation', 'education']]
     y = _df_train['trans_log_price']
     ##TODO add capability for distributed cluster on compute engine
     ##TODO add hyperparameter tuning
@@ -54,7 +54,7 @@ def predict_component(df_predict: Input[Dataset], model: Input[Model], y_hat: Ou
 
     _df_predict = dd.read_parquet(df_predict.uri).compute()
 
-    X = _df_predict[['latitude','longitude','property_type','sqft','beds','baths','days_since_2014']]
+    X = _df_predict[['latitude', 'longitude', 'property_type', 'sqft', 'beds', 'baths', 'days_since_2014', 'population', 'housing', 'transportation', 'education']]
 
     with fs.open(model.uri, 'rb') as f:
         _model = pickle.load(f)
@@ -84,7 +84,6 @@ def validate_component(y_hat: Input[Dataset], y_hat_test: Input[Dataset], metric
 
     def moments(s):
         return s.apply(np.log).mean(), s.apply(np.log).std()
-
 
     _metrics = {}
     _metrics['training_performance'] = median_absolute_percentage_error(inv_zscore_log_price(_y_hat['y_hat'], *moments(_y_hat['price'])),
@@ -154,3 +153,5 @@ def run_pricing_pipeline(event=None):
     )
 
     job.run(sync=False)
+
+run_pricing_pipeline()

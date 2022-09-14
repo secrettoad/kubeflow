@@ -22,12 +22,12 @@ We can see through the standardized validation process that simply joining the c
 
 {"training_performance": 3.5521078523339176, "test_performance": 5.779388753911955}
 
-
 [Experiment with census data](https://console.cloud.google.com/vertex-ai/locations/us-central1/pipelines/runs/demo-pipeline-20220914122822?project=demos-362417)
 
 [Relevant git branch](https://github.com/secrettoad/multifamily_pricing/tree/experiment-add-census-data)
 
 {"training_performance": 2.2145700468597287, "test_performance": 5.218189891420213}
+
 Request #2:
 
 Monotonicity with respect to square footage is already implemented in XGBoost, and so we implement it within the `train_component` function.

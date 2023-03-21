@@ -6,7 +6,7 @@ A commercial mortgage underwriter is interested in the future prices and valuati
 
 ## Code Sample
 
-The code for this pipeline resides in https://github.com/secrettoad/kubeflow/blob/main/multifamily_pricing/main.py
+The python code for this pipeline resides in https://github.com/secrettoad/kubeflow/blob/main/multifamily_pricing/main.py
 
 To run the pipeline, call the `run_pricing_pipeline` function within `main.py`
 
@@ -21,18 +21,6 @@ gcloud functions deploy python-finalize-function \
 --trigger-bucket="coysu-demo-datasets" \
 --memory=1024MB
 ``` 
-
-We can see through the standardized validation process that simply joining the census data as additional features significantly improves performance (at least anecdotally, we would need to bootstrap the process to measure statistical significance.) It is also worth noting that no feature engineering work was done here, and that would be an obvious place to begin to invest in incremental performance.
-
-[Experiment without census data](https://console.cloud.google.com/vertex-ai/locations/us-central1/pipelines/runs/demo-pipeline-20220913171148?project=demos-362417)
-
-{"training_performance": 3.5521078523339176, "test_performance": 5.779388753911955}
-
-[Experiment with census data](https://console.cloud.google.com/vertex-ai/locations/us-central1/pipelines/runs/demo-pipeline-20220914122822?project=demos-362417)
-
-[Relevant git branch](https://github.com/secrettoad/multifamily_pricing/tree/experiment-add-census-data)
-
-{"training_performance": 2.2145700468597287, "test_performance": 5.218189891420213}
 
 The `Google Cloud Functions` cli command provided at the beginning of this document creates a serverless, asynchronous function that listens for new files being added to the relevant bucket. The pipeline then uses `dask` to load all relevant files within each train and test directory.
 

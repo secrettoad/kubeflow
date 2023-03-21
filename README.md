@@ -1,4 +1,4 @@
-#### Kubeflow pipelines for multifamily price prediction
+# Kubeflow pipelines for multifamily price prediction
 
 ## Problem
 
@@ -7,8 +7,6 @@ A commercial mortgage underwriter is interested in the future prices and valuati
 ## Code Sample
 
 The code for this pipeline resides in https://github.com/secrettoad/kubeflow/blob/main/multifamily_pricing/main.py
-
-# multifamily_pricing
 
 To run the pipeline, call the `run_pricing_pipeline` function within `main.py`
 

@@ -26,7 +26,6 @@ The `Google Cloud Functions` cli command provided at the beginning of this docum
 
 Within the function `deploy_component` a model is pushed to the `gcp` model registry and then exposed via an http endpoint.
 
-`Kubeflow` in conjunction with `Vertex AI` is a combination of tools that enables the deployment of pipelines in a commercial-grade, production-ready manner without demanding an inordinate amount of time or resources. Contact Coysu today for an estimate on bringing your machine learning model into production.
-
+`Kubeflow` in conjunction with `Vertex AI` is a combination of tools that enables the deployment of pipelines in a commercial-grade, production-ready manner without demanding an inordinate amount of time or resources.
 
 
